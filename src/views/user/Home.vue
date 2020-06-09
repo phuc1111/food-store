@@ -7,7 +7,7 @@
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
-          <a href="#">Home</a>
+          <a href="#" class="breadcrumb-name">Trang chủ</a>
         </li>
         <li v-if="isCate" class="breadcrumb-item active" aria-current="page">{{isCate}}</li>
       </ol>
@@ -61,6 +61,12 @@
         </li>
         <li class="page-item">
           <a class="page-link" href="#">3</a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="#">4</a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="#">5</a>
         </li>
         <li class="page-item">
           <a class="page-link" href="#" aria-label="Next">
@@ -216,6 +222,9 @@ export default {
   margin: 40px 0 0 0 !important;
   margin: 0;
   background: rgb(255, 255, 255) !important;
+}
+.breadcrumb-name {
+  color: #17a2b8;
 }
 .pagination {
   justify-content: center;

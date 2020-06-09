@@ -59,9 +59,6 @@ export default {
         "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRdqmRqSGE8QhTX6G1P53E2VQPAbmLgTCrprt8NFlTr3Df18vVl&usqp=CAU"
       ]
     };
-  },
-  created() {
-    console.log(this.slides);
   }
 };
 </script>

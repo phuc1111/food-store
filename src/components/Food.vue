@@ -7,6 +7,7 @@
         <p class="card-text">{{this.description}}</p>
         <div class="bottom">
           <b-icon-cart-plus class="cart"></b-icon-cart-plus>
+          <del class="old_price price" v-if="this.old_price">{{this.old_price}} VND</del>
           <span class="price">{{this.price}} VND</span>
         </div>
       </div>
@@ -16,7 +17,7 @@
 <script>
 export default {
   name: "Food",
-  props: ["image", "name", "description", "price"],
+  props: ["image", "name", "description", "price", "old_price"],
   data() {
     return {};
   }
@@ -26,6 +27,7 @@ export default {
 .card {
   margin: 15px;
   width: 18rem;
+  transition: linear 0.2s;
 }
 .card:hover {
   background: rgb(230, 226, 226);
@@ -44,6 +46,9 @@ export default {
 }
 .cart {
   font-size: 20px;
+}
+.old_price {
+  color: rgb(197, 33, 33);
 }
 @media only screen and (max-width: 46.24em) {
   .card {
