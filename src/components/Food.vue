@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="card">
+    <div class="card" @click="goDetail()">
       <img class="card-img-top" :src="this.image" alt="Card image cap" />
       <div class="card-body">
         <h5 class="card-title">{{this.name}}</h5>
@@ -20,6 +20,11 @@ export default {
   props: ["image", "name", "description", "price", "old_price"],
   data() {
     return {};
+  },
+  methods: {
+    goDetail() {
+      this.$router.push({ name: "FoodDetail" });
+    }
   }
 };
 </script>

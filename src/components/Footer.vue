@@ -86,6 +86,10 @@ export default {
   .footer-item {
     width: 100%;
   }
+  .map {
+    width: 100% !important;
+    display: none;
+  }
 }
 @media only screen and (min-width: 46.25em) and (max-width: 63.9375em) {
   .footer-item {
