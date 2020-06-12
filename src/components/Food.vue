@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="card scale-in-hor-center">
+    <div class="card scale-in-hor-center shadow-inset-lr">
       <img class="card-img-top" @click="goDetail()" :src="this.image" alt="Card image cap" />
       <div class="card-body">
         <h5 class="card-title" @click="goDetail()">{{this.name}}</h5>
@@ -46,7 +46,7 @@ export default {
   margin: 15px;
   width: 18rem;
   transition: linear 0.2s;
-  background: rgb(189, 185, 185);
+  background: rgb(212, 206, 206) !important;
   box-shadow: 10px 7px 15px #aaaaaa;
 }
 .card:hover {
@@ -82,11 +82,23 @@ export default {
 .roll-in-blurred-top {
   animation: roll-in-blurred-top 1s cubic-bezier(0.23, 1, 0.32, 1) both;
 }
+.shadow-inset-lr {
+  animation: shadow-inset-lr 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+@keyframes shadow-inset-lr {
+  0% {
+    box-shadow: inset 0 0 0 0 transparent, inset 0 0 0 0 transparent;
+  }
+  100% {
+    box-shadow: inset -6px 0 14px -6px rgba(0, 0, 0, 0.5),
+      inset 6px 0 14px -6px rgba(0, 0, 0, 0.5);
+  }
+}
 @keyframes roll-in-blurred-top {
   0% {
     transform: rotate(-360deg);
-    filter: blur(20px);
-    opacity: 0;
+    filter: blur(10px);
+    opacity: 0.3;
   }
   100% {
     transform: rotate(0deg);
