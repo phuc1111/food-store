@@ -1,12 +1,12 @@
 <template>
   <div>
-    <div class="card scale-in-hor-center" @click="goDetail()">
-      <img class="card-img-top" :src="this.image" alt="Card image cap" />
+    <div class="card scale-in-hor-center">
+      <img class="card-img-top" @click="goDetail()" :src="this.image" alt="Card image cap" />
       <div class="card-body">
-        <h5 class="card-title">{{this.name}}</h5>
+        <h5 class="card-title" @click="goDetail()">{{this.name}}</h5>
         <p class="card-text">{{this.description}}</p>
         <div class="bottom">
-          <b-icon-cart-plus class="cart"></b-icon-cart-plus>
+          <b-icon-cart-plus class="cart" @click="addItemToStore()"></b-icon-cart-plus>
           <del
             class="old_price price"
             v-if="this.old_price && this.old_price<this.price"
@@ -27,6 +27,16 @@ export default {
   methods: {
     goDetail() {
       this.$router.push({ name: "FoodDetail" });
+    },
+    addItemToStore() {
+      var food = {
+        name: this.name,
+        image: this.image,
+        description: this.description,
+        price: this.price
+      };
+      sessionStorage.setItem("food", food);
+      console.log(food);
     }
   }
 };

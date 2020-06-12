@@ -188,9 +188,6 @@ export default {
   methods: {
     setCategory(cate) {
       this.isCate = cate;
-    },
-    addItemToStore(item) {
-      sessionStorage.setItem("");
     }
   },
   created() {
@@ -213,6 +210,8 @@ export default {
         });
       });
     console.log(this.foodss);
+    var food = sessionStorage.getItem("food");
+    console.log(food);
   },
   components: {
     Navbar,
