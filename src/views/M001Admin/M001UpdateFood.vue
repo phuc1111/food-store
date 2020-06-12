@@ -21,16 +21,12 @@
           </label>
         </b-col>
         <b-col sm="9">
-          <b-form-file
-            id="file-input"
-            accept="image/png, image/jpeg"
-            @change="handleFileChange($event)"
-            v-model="file"
-            :state="Boolean(file)"
-            placeholder="Choose a file or drop it here..."
-            drop-placeholder="Drop file here..."
-          ></b-form-file>
-          <!-- <cld-image cloudName="pnvcc" publicId="zy20ogohunerrck8bcp1" width="100" crop="scale" /> -->
+          <cld-image
+            cloudName="pnvcc"
+            :publicId="this.$route.params.public_id"
+            width="100"
+            crop="scale"
+          />
         </b-col>
       </b-row>
       <b-row class="my-1">
@@ -38,6 +34,17 @@
           <label>
             Nhập
             <code>giá sản phẩm</code>:
+          </label>
+        </b-col>
+        <b-col sm="9">
+          <b-form-input type="number" v-model="old_price" placeholder="VD: 15000"></b-form-input>
+        </b-col>
+      </b-row>
+      <b-row class="my-1">
+        <b-col sm="3">
+          <label>
+            Giảm giá
+            <code>Giá mới</code>:
           </label>
         </b-col>
         <b-col sm="9">
@@ -86,56 +93,41 @@
     <div class="alert alert-danger" v-if="error.length>0" role="alert">
       <div v-for="(err, index) in error" :key="index">{{err}}</div>
     </div>
-    <button type="button" class="btn btn-info" @click="upload()">Thêm sản phẩm</button>
+    <button type="button" class="btn btn-info" @click="update()">Sửa sản phẩm</button>
   </div>
 </template>
 <script>
 /* eslint-disable */
 import db from "@/firebase/init";
-import axios from "axios";
-import Cloudinary from "cloudinary-vue";
+// import axios from "axios";
+// import Cloudinary from "cloudinary-vue";
 import date from "../../../autoCreate/date";
 export default {
-  name: "M001AddFood",
+  name: "M001UpdateFood",
   data() {
     return {
       results: null,
-      name: "rau sach",
+      old_price: null,
+      name: "test - rau sach",
       file: null,
       price: null,
       date: null,
-      description: "Đây là lạo rau sạch chỉ có ở tiệm chúng tôi",
+      description: "test - .........................",
       comment: [],
-      from: "Quang nam",
-      category: 1,
+      from: "test-Quang nam",
+      category: null,
       error: [],
       formData: null,
       options: [
         { value: null, text: "Vui lòng chọn loại sản phẩm" },
         { value: 1, text: "Rau sạch" },
         { value: 2, text: "Hải sản" }
-      ]
+      ],
+      foods: [],
+      id: null
     };
   },
   methods: {
-    handleFileChange(event) {
-      console.log("handlefilechange", event.target.files);
-      //returns an array of files even though multiple not used
-      this.file = event.target.files[0];
-      this.filesSelected = event.target.files.length;
-    },
-    prepareFormData() {
-      this.formData = new FormData();
-      this.formData.append("upload_preset", "nvcchf1d");
-      // this.formData.append("tags", this.tags); // Optional - add tag for image admin in Cloudinary
-      this.formData.append("file", this.fileContents);
-    },
-    addFoodToFirebase() {
-      this.error = [];
-      this.check();
-      if (this.error.length == 0) {
-      }
-    },
     check() {
       if (!this.name) {
         this.error.push("Vui lòng nhập tên sản phẩm");
@@ -160,69 +152,42 @@ export default {
       if (!this.category) {
         this.error.push("Vui lòng chọn loại sản phẩm");
       }
-      if (!this.file) {
-        this.error.push("Vui lòng chọn hình ảnh");
-      }
     },
-    upload() {
-      this.error = [];
-      this.check();
-      if (this.error.length == 0) {
-        //no need to look at selected files if there is no cloudname or preset
-        console.log("upload", this.file.name);
-        let reader = new FileReader();
-        // attach listener to be called when data from file
-        reader.addEventListener(
-          "load",
-          function() {
-            this.fileContents = reader.result;
-            this.prepareFormData();
-            let cloudinaryUploadURL = `https://api.cloudinary.com/v1_1/pnvcc/upload`;
-            let requestObj = {
-              url: cloudinaryUploadURL,
-              method: "POST",
-              data: this.formData
-            };
-            axios
-              .post(
-                "https://api.cloudinary.com/v1_1/pnvcc/upload",
-                this.formData
-              )
-              .then(data => {
-                //add data to firebase
-                console.log(data.data.url);
-                db.collection("foods")
-                  .add({
-                    image: data.data.url,
-                    public_id: data.data.public_id,
-                    name: this.name,
-                    price: this.price,
-                    date: date.getCurrentDay(),
-                    description: this.description,
-                    from: this.from,
-                    category: this.category
-                  })
-                  .then(() => {
-                    this.$router.push({ name: "M001Food" });
-                  })
-                  .catch(err => {
-                    this.error = err;
-                    console.log(err);
-                  });
-              })
-              .catch(err => {
-                this.error = err;
-                console.log(err);
-              });
-          }.bind(this),
-          false
-        );
-        // call for file read if there is a file
-        if (this.file && this.file.name) {
-          reader.readAsDataURL(this.file);
-        }
+    update() {
+      if (this.price > this.new_price) {
       }
+      db.collection("foods")
+        .doc(this.id)
+        .update({
+          name: this.name,
+          price: this.price,
+          description: this.description,
+          from: this.from,
+          category: this.category,
+          old_price: this.old_price
+        })
+        .then(() => {
+          this.$router.push({ name: "M001Food" });
+        });
     }
+  },
+  created() {
+    console.log(this.$route.params.public_id);
+    db.collection("foods")
+      .where("public_id", "==", this.$route.params.public_id)
+      .get()
+      .then(data => {
+        // console.log(data.data());
+        data.forEach(res => {
+          console.log(res.data());
+          (this.id = res.id), (this.name = res.data().name);
+          this.price = res.data().price;
+          this.old_price = res.data().price;
+          this.description = res.data().description;
+          this.from = res.data().from;
+          this.category = res.data().category;
+        });
+      });
   }
 };
 </script>

@@ -30,13 +30,13 @@
           <b-nav-item-dropdown right>
             <!-- Using 'button-content' slot -->
             <template v-slot:button-content>
-              <em v-if="!user">User</em>
-              <em v-if="user">{{user}}</em>
+              <em v-if="!phone">User</em>
+              <em v-if="phone">{{phone}}</em>
             </template>
-            <b-dropdown-item href="#" v-if="!user" @click="login()">Đăng nhập</b-dropdown-item>
-            <b-dropdown-item href="#" v-if="user">Trang cá nhân</b-dropdown-item>
-            <b-dropdown-item href="#" v-if="user">Đăng xuất</b-dropdown-item>
-            <b-dropdown-item href="#" v-if="user">Yêu Thích</b-dropdown-item>
+            <b-dropdown-item href="#" v-if="!token" @click="login()">Đăng nhập</b-dropdown-item>
+            <b-dropdown-item href="#" v-if="token">Trang cá nhân</b-dropdown-item>
+            <b-dropdown-item href="#" v-if="token">Đăng xuất</b-dropdown-item>
+            <b-dropdown-item href="#" v-if="token">Yêu Thích</b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
@@ -49,7 +49,8 @@ export default {
   name: "Navbar",
   data() {
     return {
-      user: null
+      token: null,
+      phone: null
     };
   },
   methods: {
@@ -57,10 +58,15 @@ export default {
       if (!this.user) {
         this.$router.push({ name: "Login" });
       }
+    },
+    logout() {
+      sessionStorage.clear();
+      this.$router.push({ name: "Home" });
     }
   },
   mounted() {
-    this.user = sessionStorage.getItem("user");
+    this.token = sessionStorage.getItem("token");
+    this.phone = sessionStorage.getItem("phone");
   }
 };
 </script>
@@ -75,6 +81,12 @@ export default {
   z-index: 1000;
   
 } */
+.nav-link:hover {
+  color: rgb(20, 20, 20) !important;
+}
+.navbar-brand:hover {
+  color: rgb(20, 20, 20) !important;
+}
 @media only screen and (max-width: 46.24em) {
   .navbar {
     padding: 0.5rem 0.5rem !important;

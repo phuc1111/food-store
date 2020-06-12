@@ -6,7 +6,7 @@ import About from "../views/user/About.vue";
 import Contact from "../views/user/Contact.vue";
 import SeeFood from "../views/user/SeeFood.vue";
 import Vegetable from "../views/user/Vegetable.vue";
-import Login from "../views/user/Login.vue";
+// import Login from "../views/user/Login.vue";
 import FoodDetail from "../views/user/FoodDetail.vue";
 import M001Dashboard from "../views/M001Admin/M001Dashboard.vue";
 import M001Food from "../views/M001Admin/M001Food.vue";
@@ -16,6 +16,12 @@ import M001Message from "../views/M001Admin/M001Message.vue";
 import M001Comment from "../views/M001Admin/M001Comment.vue";
 import M001Category from "../views/M001Admin/M001Category.vue";
 import M001AddFood from "../views/M001Admin/M001AddFood.vue";
+import M001UpdateFood from "../views/M001Admin/M001UpdateFood.vue";
+import M001AddCategory from "../views/M001Admin/M001AddCategory.vue";
+
+import M003Sigup from "../views/M003Login/M003Sigup.vue";
+import M003Login from "../views/M003Login/M003Login.vue";
+
 
 /* eslint-disable */
 Vue.use(VueRouter);
@@ -32,9 +38,24 @@ const routes = [
     component: M001AddFood
   },
   {
+    path: "/dang-ky/",
+    name: "M003Sigup",
+    component: M003Sigup
+  },
+  {
+    path: "/m001updatefood/:public_id",
+    name: "M001UpdateFood",
+    component: M001UpdateFood
+  },
+  {
     path: "/m001admin/",
     name: "M001Dashboard",
     component: M001Dashboard
+  },
+  {
+    path: "/m001addcategory/",
+    name: "M001AddCategory",
+    component: M001AddCategory
   },
   {
     path: "/m001order/",
@@ -68,8 +89,8 @@ const routes = [
   },
   {
     path: "/dang-nhap",
-    name: "Login",
-    component: Login
+    name: "M003Login",
+    component: M003Login
   },
   {
     path: "/chi-tiet",

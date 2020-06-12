@@ -1,13 +1,16 @@
 <template>
   <div>
-    <div class="card" @click="goDetail()">
+    <div class="card scale-in-hor-center" @click="goDetail()">
       <img class="card-img-top" :src="this.image" alt="Card image cap" />
       <div class="card-body">
         <h5 class="card-title">{{this.name}}</h5>
         <p class="card-text">{{this.description}}</p>
         <div class="bottom">
           <b-icon-cart-plus class="cart"></b-icon-cart-plus>
-          <del class="old_price price" v-if="this.old_price">{{this.old_price}} VND</del>
+          <del
+            class="old_price price"
+            v-if="this.old_price && this.old_price<this.price"
+          >{{this.old_price}} VND</del>
           <span class="price">{{this.price}} VND</span>
         </div>
       </div>
@@ -33,9 +36,11 @@ export default {
   margin: 15px;
   width: 18rem;
   transition: linear 0.2s;
+  background: rgb(189, 185, 185);
+  box-shadow: 10px 7px 15px #aaaaaa;
 }
 .card:hover {
-  background: rgb(230, 226, 226);
+  /* background: rgb(230, 226, 226); */
   box-shadow: 10px 7px 15px #aaaaaa;
 }
 .card:hover ~ .price {
@@ -55,10 +60,55 @@ export default {
 .old_price {
   color: rgb(197, 33, 33);
 }
+.scale-in-hor-center {
+  animation: scale-in-hor-center 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.scale-in-hor-center:hover {
+  /* animation: rotate-diagonal-1 0.75s linear both; */
+  animation: roll-in-blurred-top 2s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+.roll-in-blurred-top {
+  animation: roll-in-blurred-top 1s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+@keyframes roll-in-blurred-top {
+  0% {
+    transform: rotate(-360deg);
+    filter: blur(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: rotate(0deg);
+    filter: blur(0);
+    opacity: 1;
+  }
+}
+@keyframes rotate-diagonal-1 {
+  0% {
+    transform: rotate3d(1, 1, 0, 0deg);
+  }
+  50% {
+    transform: rotate3d(1, 1, 0, -180deg);
+  }
+  100% {
+    transform: rotate3d(1, 1, 0, -360deg);
+  }
+}
+@keyframes scale-in-hor-center {
+  0% {
+    transform: scaleX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
 @media only screen and (max-width: 46.24em) {
   .card {
     margin: 5px auto;
-    width: 90%;
+    width: 100%;
   }
 }
 @media only screen and (min-width: 46.25em) and (max-width: 63.9375em) {

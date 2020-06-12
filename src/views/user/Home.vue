@@ -1,28 +1,41 @@
 
 <template>
-  <div class="home">
+  <div class="home-food">
+    <M002Chat />
     <Navbar />
     <Slide />
-    <h3 class="title">Các sản phẩm mới nhất</h3>
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-          <a href="#" class="breadcrumb-name">Trang chủ</a>
-        </li>
-        <li v-if="isCate" class="breadcrumb-item active" aria-current="page">{{isCate}}</li>
-      </ol>
-    </nav>
+    <h3 class="title tracking-in-contract">Các sản phẩm mới nhất</h3>
+    <div class="search-bar">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="#" class="breadcrumb-name">Trang chủ</a>
+          </li>
+          <li v-if="isCate" class="breadcrumb-item active" aria-current="page">{{isCate}}</li>
+        </ol>
+      </nav>
+      <b-input-group>
+        <b-form-input type="text" placeholder="Nhập tên để tìm sản phẩm" class="search-input"></b-form-input>
+        <b-input-group-prepend>
+          <b-button variant="outline-info">Tìm</b-button>
+        </b-input-group-prepend>
+      </b-input-group>
+    </div>
 
-    <div class="main">
+    <div class="main-home">
       <div class="home_category cate">
         <p class="home_category--name">Danh mục sản phẩm</p>
         <ul class="list-group">
           <li
             class="list-group-item list-category"
-            v-for="(cate, index) in category"
+            @click="setCategory('Tất cả sản phẩm')"
+          >Tất cả sản phẩm</li>
+          <li
+            class="list-group-item list-category"
+            v-for="(cate, index) in categorys"
             :key="index"
-            @click="setCategory(cate)"
-          >{{cate}}</li>
+            @click="setCategory(cate.name)"
+          >{{cate.name}}</li>
         </ul>
 
         <p class="home_category--filter cate">Lọc theo</p>
@@ -36,12 +49,13 @@
       </div>
       <div class="home__food">
         <Food
-          v-for="(food, index) in foods"
+          v-for="(food, index) in foodss"
           :key="index"
           :image="food.image"
           :price="food.price"
           :description="food.description"
           :name="food.name"
+          :old_price="food.old_price"
         />
       </div>
     </div>
@@ -87,16 +101,13 @@ import Navbar from "../../components/Navbar";
 import Slide from "../../components/Slide";
 import Food from "../../components/Food";
 import Footer from "../../components/Footer";
+import M002Chat from "../M002User/M002Chat";
 export default {
   name: "Home",
   data() {
     return {
-      category: [
-        "Tất cả sản phẩm",
-        "Rau Sạch",
-        "Hải sản tươi sống",
-        "Trái cây"
-      ],
+      foodss: [],
+      categorys: [],
       prices: [
         "<= 50.000 VND",
         "50.000 - 100.000 VND",
@@ -133,7 +144,8 @@ export default {
             "https://sohanews.sohacdn.com/thumb_w/660/2015/1-phan-biet-rau-sach-ban-1445052072947-0-0-359-488-crop-1445052237590.jpg",
           name: "Rau sieu sach ",
           description: "Some quick example content.",
-          price: 12000
+          price: 12000,
+          old_price: 100000
         },
         {
           image:
@@ -141,7 +153,8 @@ export default {
           name: "Rau sieu sach ",
           description:
             "Some quick example text to build on the card title and make up the bulk of the card's content.",
-          price: 12000
+          price: 12000,
+          old_price: 100000
         },
         {
           image:
@@ -149,7 +162,8 @@ export default {
           name: "Rau sieu sach ",
           description:
             "Some quick example text to build on the card title and make up the bulk of the card's content.",
-          price: 12000
+          price: 12000,
+          old_price: 1000
         },
         {
           image:
@@ -174,34 +188,49 @@ export default {
   methods: {
     setCategory(cate) {
       this.isCate = cate;
+    },
+    addItemToStore(item) {
+      sessionStorage.setItem("");
     }
   },
   created() {
     db.collection("categorys")
       .get()
       .then(data => {
-        // console.log(data);
         data.forEach(doc => {
-          console.log(doc.data());
+          let cate = doc.data();
+          cate.id = doc.id;
+          this.categorys.push(cate);
         });
       });
+    db.collection("foods")
+      .get()
+      .then(data => {
+        data.forEach(doc => {
+          let cate = doc.data();
+          cate.id = doc.id;
+          this.foodss.push(cate);
+        });
+      });
+    console.log(this.foodss);
   },
   components: {
     Navbar,
     Slide,
     Food,
-    Footer
+    Footer,
+    M002Chat
   }
 };
 </script>
-<style>
-.home {
+<style scoped>
+.home-food {
   max-width: 1500px;
   margin: 0 auto;
 }
-.main {
+.main-home {
   border: 0.3px solid rgb(192, 190, 190);
-  display: flex;
+  display: flex !important;
 }
 .title {
   margin: 20px 0;
@@ -210,13 +239,14 @@ export default {
   width: 20%;
 }
 .home_category--name {
-  /* background-color: #17a2b8 !important; */
-  color: #17a2b8;
+  background-color: #17a2b8 !important;
+  color: #fff;
   margin: 0;
   font-size: 20px;
 }
 .home_category--filter {
-  color: #17a2b8;
+  background-color: #17a2b8 !important;
+  color: #fff;
   margin: 30px 0 0 0;
   font-size: 20px;
 }
@@ -241,6 +271,42 @@ export default {
 .pagination {
   justify-content: center;
 }
+.search-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.tracking-in-contract {
+  -webkit-animation: tracking-in-contract 0.8s
+    cubic-bezier(0.215, 0.61, 0.355, 1) both;
+  animation: tracking-in-contract 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) both;
+}
+@-webkit-keyframes tracking-in-contract {
+  0% {
+    letter-spacing: 1em;
+    opacity: 0;
+  }
+  40% {
+    opacity: 0.6;
+  }
+  100% {
+    letter-spacing: normal;
+    opacity: 1;
+  }
+}
+@keyframes tracking-in-contract {
+  0% {
+    letter-spacing: 1em;
+    opacity: 0;
+  }
+  40% {
+    opacity: 0.6;
+  }
+  100% {
+    letter-spacing: normal;
+    opacity: 1;
+  }
+}
 @media only screen and (max-width: 46.24em) {
   .title {
     margin: 10px 0;
@@ -252,7 +318,11 @@ export default {
     width: 100%;
   }
   .breadcrumb {
-    margin: 10px 0 0 0 !important;
+    display: none;
+    margin: 0;
+  }
+  .search-bar {
+    justify-content: center;
   }
 }
 @media only screen and (min-width: 46.25em) and (max-width: 63.9375em) {
