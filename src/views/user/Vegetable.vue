@@ -64,6 +64,7 @@
         :description="food.description"
         :name="food.name"
         :old_price="food.old_price"
+        :id="food.id"
       />
     </div>
     <Footer />

@@ -64,6 +64,7 @@
         :description="food.description"
         :name="food.name"
         :old_price="food.old_price"
+        :id="food.id"
       />
     </div>
     <Footer />
@@ -123,7 +124,7 @@ export default {
           name: "Rau sieu sach ",
           description:
             "Some quick example text to build on the card title and make up the bulk of the card's content.",
-          price: 70000
+          price: 70.0
         },
         {
           image:

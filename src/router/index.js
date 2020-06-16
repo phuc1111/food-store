@@ -93,7 +93,7 @@ const routes = [
     component: M003Login
   },
   {
-    path: "/chi-tiet",
+    path: "/chi-tiet/:id",
     name: "FoodDetail",
     component: FoodDetail
   },

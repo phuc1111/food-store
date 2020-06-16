@@ -15,9 +15,9 @@
         <li class="list-group-item list-category">Email: abc@gmail.com</li>
         <li class="list-group-item list-category">Địa chỉ: 11b Lê Hữu Trác</li>
         <div class="icon">
-          <font-awesome-icon :icon="['fab', 'facebook']" class="icon-item" />
+          <!-- <font-awesome-icon :icon="['fab', 'facebook']" class="icon-item" />
           <font-awesome-icon :icon="['fab', 'twitter']" class="icon-item" />
-          <font-awesome-icon :icon="['fab', 'linkedin']" class="icon-item" />
+          <font-awesome-icon :icon="['fab', 'linkedin']" class="icon-item" />-->
         </div>
       </ul>
     </div>

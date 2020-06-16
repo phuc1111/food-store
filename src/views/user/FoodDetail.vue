@@ -12,13 +12,13 @@
       </ol>
     </nav>
     <div class="food-detail">
-      <img :src="image" alt class="image" />
+      <img :src="foods.image" alt class="image" />
       <div class="content">
-        <h2 class="name">{{name}}</h2>
-        <p>{{description}}</p>
+        <h2 class="name">{{foods.name}}</h2>
+        <p>{{foods.description}}</p>
         <div class="btn-action">
           <button type="button" class="btn btn-primary">Thêm vào giỏ</button>
-          <p class="price">{{price}} VND</p>
+          <p class="price">{{foods.price}} VND</p>
         </div>
       </div>
     </div>
@@ -32,6 +32,8 @@ import Navbar from "../../components/Navbar";
 import Slide from "../../components/Slide";
 import Footer from "../../components/Footer";
 
+import db from "@/firebase/init";
+
 export default {
   name: "FoodDetail",
   components: {
@@ -41,13 +43,8 @@ export default {
   },
   data() {
     return {
-      image:
-        "https://sohanews.sohacdn.com/thumb_w/660/2015/1-phan-biet-rau-sach-ban-1445052072947-0-0-359-488-crop-1445052237590.jpg",
-      name: "Rau hoi sach ",
-      description:
-        "Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content.Some quick example text to build on the card title and make up the bulk of the card's content.Some quick example text to build on the card title and make up the bulk of the card's content.Some quick example text to build on the card title and make up the bulk of the card's content.Some quick example text to build on the card title and make up the bulk of the card's content.",
-      price: 15000,
-      old_price: 20000,
+      foods: {},
+
       isLoading: false,
       fullPage: true,
       color: "#17a2b8"
@@ -61,12 +58,17 @@ export default {
         this.isLoading = false;
       }, 1000);
     },
-    count() {
-      return this.$store.getters.doneTodos;
-    }
+    count() {}
   },
   created() {
-    console.log(this.count());
+    db.collection("foods")
+      .doc(this.$route.params.id)
+      .get()
+      .then(data => {
+        console.log(data.data());
+        this.foods = data.data();
+      });
+    console.log(this.foods);
   }
 };
 </script>
@@ -76,7 +78,7 @@ export default {
   margin: 0 auto;
 }
 .food-detail {
-  max-width: 1500px;
+  max-width: 1200px;
   margin: 50px auto;
   display: flex;
 }
@@ -86,10 +88,14 @@ export default {
   align-self: center;
 }
 .content {
-  margin: 10px 50px;
+  margin: 10px 0;
+  width: 50%;
 }
 .price {
   align-self: center;
+}
+.image {
+  width: 100%;
 }
 @media only screen and (max-width: 46.24em) {
   .food-detail {

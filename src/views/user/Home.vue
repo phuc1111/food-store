@@ -56,6 +56,7 @@
           :description="food.description"
           :name="food.name"
           :old_price="food.old_price"
+          :id="food.id"
         />
       </div>
     </div>
@@ -209,9 +210,7 @@ export default {
           this.foodss.push(cate);
         });
       });
-    console.log(this.foodss);
     var food = sessionStorage.getItem("food");
-    console.log(food);
   },
   components: {
     Navbar,

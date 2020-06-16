@@ -4,8 +4,8 @@
     <div class="login">
       <div id="recaptcha-container"></div>
       <div class="form-group forms">
-        <label for>Tên đăng nhập</label>
-        <input type="text" class="form-control" placeholder="Tên đăng nhập" v-model="username" />
+        <label for>Số điện thoại</label>
+        <input type="number" class="form-control" placeholder="vd: 0364097989" v-model="phone" />
         <!-- <label for>Mật khẩu</label>
         <input type="password" class="form-control" placeholder="Mật khẩu" v-model="password" />-->
         <button type="button" class="btn btn-info btn-login" @click="login()">Đăng nhập</button>
@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import db from "@/firebase/init";
 import Navbar from "../../components/Navbar";
 import firebase from "firebase";
 export default {
@@ -30,46 +31,97 @@ export default {
       username: "user",
       password: "user",
       error: [],
+      phone: null,
       recaptchaVerifier: null,
       token: null
     };
   },
   methods: {
+    checkPhone(phone) {
+      var reg = /((09|03|07|08|05)+([0-9]{8})\b)/g;
+      if (phone.match(reg)) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    check() {
+      if (!this.phone) {
+        this.error.push("Vui lòng nhập số điện thoại");
+      }
+      // if (this.phone.length < 10) {
+      //   this.error.push("Sai định dạng số điện thoại");
+      // }
+      if (!this.checkPhone(this.phone)) {
+        this.error.push("Sai định dạng số điện thoại");
+      }
+    },
     login() {
-      var vm = this;
-      firebase.auth().languageCode = "vi";
-      var applicationVerifier = new firebase.auth.RecaptchaVerifier(
-        "recaptcha-container"
-      );
-      firebase
-        .auth()
-        .signInWithPhoneNumber("+84846691716", applicationVerifier)
-        .then(confirmationResult => {
-          var code = prompt("Nhập mã được gửi đến điện thoại của bạn", "");
+      this.error = [];
+      this.check();
+      if (this.error.length <= 0) {
+        var vm = this;
+        //set language and captcha
+        firebase.auth().languageCode = "vi";
+        var applicationVerifier = new firebase.auth.RecaptchaVerifier(
+          "recaptcha-container"
+        );
+        //format phone number
+        var new_phone = "+84" + this.phone.slice(1);
 
-          confirmationResult
-            .confirm(code)
-            .then(function(result) {
-              // User signed in successfully.
-              console.log(result.user);
-              // this.token = result.user.refreshToken;
-              sessionStorage.setItem("token", result.user.refreshToken);
-              sessionStorage.setItem("phone", result.user.phoneNumber);
-              vm.$router.push({ name: "Home" });
-              location.reload();
-              // ...
-            })
-            .catch(function(error) {
-              // User couldn't sign in (bad verification code?)
-              console.log("loi : ", error);
-              //   this.error = error;
-              // ...
-            });
-        })
-        .catch(function(error) {
-          //   this.error.push(error.message);
-          console.error("SMS not sent", error.message);
-        });
+        firebase
+          .auth()
+          .signInWithPhoneNumber(new_phone, applicationVerifier)
+          .then(confirmationResult => {
+            var code = prompt("Nhập mã được gửi đến điện thoại của bạn", "");
+
+            confirmationResult
+              .confirm(code)
+              .then(function(result) {
+                // User signed in successfully.
+                console.log(result.user);
+                // this.token = result.user.refreshToken;
+
+                localStorage.setItem("token", result.user.refreshToken);
+                localStorage.setItem("phone", result.user.phoneNumber);
+
+                db.collection("users")
+                  .where("phone", "==", new_phone)
+                  // .doc(new_phone)
+                  .get()
+                  .then(user => {
+                    // console.log("first: ", user.data());
+                    user.forEach(doc => {
+                      console.log("data is: ", doc.data());
+                    });
+
+                    if (user.exists) {
+                      vm.$router.push({ name: "Home" });
+                      location.reload();
+                    } else {
+                      db.collection("users")
+                        .add({ phone: new_phone })
+                        .then(() => {
+                          vm.$router.push({ name: "Home" });
+                          location.reload();
+                        });
+                    }
+                  });
+              })
+              .catch(function(error) {
+                // User couldn't sign in (bad verification code?)
+                console.log("loi : ", error);
+                //   this.error = error;
+                // ...
+              });
+          })
+          .catch(function(error) {
+            //   this.error.push(error.message);
+            console.error("SMS not sent", error.message);
+          });
+      } else {
+        this.toast();
+      }
     },
     created() {
       this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
