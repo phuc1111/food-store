@@ -1,14 +1,15 @@
 <template>
   <div>
-    <Navbar />
     <div class="login">
       <div id="recaptcha-container"></div>
       <div class="form-group forms">
-        <label for>Số điện thoại</label>
+        <label for>Số điện thoại *</label>
         <input type="number" class="form-control" placeholder="vd: 0364097989" v-model="phone" />
+        <label for>Địa chỉ</label>
+        <input type="text" class="form-control" placeholder="vd: 20 Quang Trung" v-model="address" />
         <!-- <label for>Mật khẩu</label>
         <input type="password" class="form-control" placeholder="Mật khẩu" v-model="password" />-->
-        <button type="button" class="btn btn-info btn-login" @click="login()">Đăng nhập</button>
+        <button type="button" class="btn btn-info btn-login" @click="login()">Đăng nhập / Đăng ký</button>
         <div class="alert-danger" v-if="error.length>0">
           <div class="alert-danger" v-for="(err, index) in error" :key="index">{{err}}</div>
         </div>
@@ -19,13 +20,11 @@
 
 <script>
 import db from "@/firebase/init";
-import Navbar from "../../components/Navbar";
+
 import firebase from "firebase";
 export default {
   name: "SeeFood",
-  components: {
-    Navbar
-  },
+
   data() {
     return {
       username: "user",
@@ -33,7 +32,8 @@ export default {
       error: [],
       phone: null,
       recaptchaVerifier: null,
-      token: null
+      token: null,
+      address: null
     };
   },
   methods: {
@@ -84,34 +84,41 @@ export default {
 
                 localStorage.setItem("token", result.user.refreshToken);
                 localStorage.setItem("phone", result.user.phoneNumber);
-
+                console.log(new_phone);
                 db.collection("users")
-                  .where("phone", "==", new_phone)
-                  // .doc(new_phone)
+                  // .where("phone", "==", new_phone)
+
+                  .doc(new_phone)
                   .get()
                   .then(user => {
                     // console.log("first: ", user.data());
-                    user.forEach(doc => {
-                      console.log("data is: ", doc.data());
-                    });
-
+                    // user.forEach(doc => {
+                    //   console.log("data is: ", doc.data());
+                    // });
+                    // console.log(user.data());
                     if (user.exists) {
+                      console.log("check exist");
                       vm.$router.push({ name: "Home" });
                       location.reload();
                     } else {
+                      console.log("new user ");
                       db.collection("users")
-                        .add({ phone: new_phone })
+                        .doc(new_phone)
+                        .set({ phone: new_phone, address: this.address })
                         .then(() => {
                           vm.$router.push({ name: "Home" });
                           location.reload();
                         });
                     }
+                  })
+                  .catch(err => {
+                    this.error.push(err.message);
                   });
               })
-              .catch(function(error) {
+              .catch(err => {
                 // User couldn't sign in (bad verification code?)
-                console.log("loi : ", error);
-                //   this.error = error;
+
+                this.error.push(err.message);
                 // ...
               });
           })
@@ -134,7 +141,7 @@ export default {
 <style>
 .login {
   width: 500px;
-  margin: 50px auto;
+  margin: 100px auto;
   background: #17a2b8;
 }
 .forms {

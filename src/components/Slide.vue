@@ -10,19 +10,19 @@
         <div class="carousel-item active">
           <img :src="this.slides[0]" class="d-block w-100" />
           <div class="carousel-caption d-none d-md-block">
-            <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+            <p>Các sản phẩm sạch 100% từ các nông trại.</p>
           </div>
         </div>
         <div class="carousel-item">
           <img :src="this.slides[0]" class="d-block w-100" />
           <div class="carousel-caption d-none d-md-block">
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <p>Chất lượng, uy tín là ưu tiên số 1 tại cửa hàng.</p>
           </div>
         </div>
         <div class="carousel-item">
           <img :src="this.slides[0]" class="d-block w-100" />
           <div class="carousel-caption d-none d-md-block">
-            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+            <p>Hãy đăng nhập và mua ngay để được hưởng các ưu đãi của của hàng.</p>
           </div>
         </div>
       </div>

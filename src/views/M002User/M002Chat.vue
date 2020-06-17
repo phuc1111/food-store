@@ -7,12 +7,13 @@
     <div class="form-chat" v-if="!check">
       <div class="top-chat">
         <p>Admin</p>
-        <p @click="checked()">X</p>
+        <font-icon @click="checked()" icon="times" />
+        <!-- <p @click="checked()">X</p> -->
       </div>
       <div class="content-chat">
         <div v-for="(message, i) in messages" :key="i">
           <div class="content-item-right" v-if="message.to != 'admin'">
-            <p class="message-detail">{{message.content}}</p>
+            <p class="message-detail">{{getdate(message.date)}}: {{message.content}}</p>
           </div>
           <div class="content-item-left" v-if="message.to == 'admin'">
             <p class="message-detail">{{message.content}}</p>
@@ -28,6 +29,7 @@
 </template>
 <script>
 /* eslint-disable */
+import date from "../../../autoCreate/date";
 import db from "@/firebase/init";
 export default {
   name: "M002Chat",
@@ -41,6 +43,9 @@ export default {
     };
   },
   methods: {
+    getdate(time) {
+      return date.getTimes(time);
+    },
     checked() {
       this.check = !this.check;
     },
@@ -56,10 +61,13 @@ export default {
       this.close = !this.close;
     },
     sendMessage() {
+      if (!this.content) {
+        this.toast();
+      }
       if (!this.phone) {
         this.$router.push({ name: "M003Login" });
       }
-      if (this.content) {
+      if (this.content && this.phone) {
         db.collection("messages")
           .add({
             from: localStorage.getItem("phone"),
@@ -70,8 +78,6 @@ export default {
           .then(() => {
             this.content = null;
           });
-      } else {
-        this.toast();
       }
     }
   },
@@ -83,23 +89,20 @@ export default {
       .onSnapshot(snapshot => {
         snapshot.docChanges().forEach(changed => {
           if (changed.type == "added") {
-            console.log(changed.doc.data());
             this.messages.push(changed.doc.data());
           }
         });
       });
-
+    var query = "admin" + this.phone;
     db.collection("messages")
-      .where("from", "==", "admin")
+      .where("from", "==", query)
       .onSnapshot(snapshot => {
         snapshot.docChanges().forEach(changed => {
           if (changed.type == "added") {
-            console.log(changed.doc.data());
             this.messages.push(changed.doc.data());
           }
         });
       });
-    // console.log("message is: ", this.messages);
   }
 };
 </script>

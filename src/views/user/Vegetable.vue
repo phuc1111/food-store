@@ -71,6 +71,7 @@
   </div>
 </template>
 <script>
+import db from "@/firebase/init";
 import Navbar from "../../components/Navbar";
 import Slide from "../../components/Slide";
 import Footer from "../../components/Footer";
@@ -85,73 +86,7 @@ export default {
   },
   data() {
     return {
-      foods: [
-        {
-          image:
-            "https://sohanews.sohacdn.com/thumb_w/660/2015/1-phan-biet-rau-sach-ban-1445052072947-0-0-359-488-crop-1445052237590.jpg",
-          name: "Rau hoi sach ",
-          description:
-            "Some quick example text to build on the card title and make up the bulk of the card's content.",
-          price: 15000,
-          old_price: 20000
-        },
-        {
-          image:
-            "https://sohanews.sohacdn.com/thumb_w/660/2015/1-phan-biet-rau-sach-ban-1445052072947-0-0-359-488-crop-1445052237590.jpg",
-          name: "Rau sieu sach ",
-          description: "Some quick example content.",
-          price: 17000
-        },
-        {
-          image:
-            "https://sohanews.sohacdn.com/thumb_w/660/2015/1-phan-biet-rau-sach-ban-1445052072947-0-0-359-488-crop-1445052237590.jpg",
-          name: "Rau sieu sach ",
-          description:
-            "Some quick example text to build on the card title and make up the bulk of the card's content.",
-          price: 19000,
-          old_price: 25000
-        },
-        {
-          image:
-            "https://sohanews.sohacdn.com/thumb_w/660/2015/1-phan-biet-rau-sach-ban-1445052072947-0-0-359-488-crop-1445052237590.jpg",
-          name: "Rau sieu sach ",
-          description: "Some quick example content.",
-          price: 30000
-        },
-        {
-          image:
-            "https://sohanews.sohacdn.com/thumb_w/660/2015/1-phan-biet-rau-sach-ban-1445052072947-0-0-359-488-crop-1445052237590.jpg",
-          name: "Rau sieu sach ",
-          description:
-            "Some quick example text to build on the card title and make up the bulk of the card's content.",
-          price: 70000
-        },
-        {
-          image:
-            "https://sohanews.sohacdn.com/thumb_w/660/2015/1-phan-biet-rau-sach-ban-1445052072947-0-0-359-488-crop-1445052237590.jpg",
-          name: "Rau sieu sach ",
-          description:
-            "Some quick example text to build on the card title and make up the bulk of the card's content.",
-          price: 120000,
-          old_price: 150000
-        },
-        {
-          image:
-            "https://sohanews.sohacdn.com/thumb_w/660/2015/1-phan-biet-rau-sach-ban-1445052072947-0-0-359-488-crop-1445052237590.jpg",
-          name: "Rau sieu sach ",
-          description:
-            "Some quick example text to build on the card title and make up the bulk of the card's content.",
-          price: 75000
-        },
-        {
-          image:
-            "https://sohanews.sohacdn.com/thumb_w/660/2015/1-phan-biet-rau-sach-ban-1445052072947-0-0-359-488-crop-1445052237590.jpg",
-          name: "Rau sieu sach ",
-          description:
-            "Some quick example text to build on the card title and make up the bulk of the card's content.",
-          price: 15000
-        }
-      ],
+      foods: [],
       search: null,
       error: null
     };
@@ -167,6 +102,18 @@ export default {
         return b.price - a.price;
       });
     }
+  },
+  created() {
+    db.collection("foods")
+      .where("category", "==", 1)
+      .get()
+      .then(data => {
+        data.forEach(doc => {
+          let food = doc.data();
+          food.id = doc.id;
+          this.foods.push(food);
+        });
+      });
   },
   computed: {
     searchData() {

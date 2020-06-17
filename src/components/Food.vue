@@ -147,8 +147,8 @@ export default {
 
 @media only screen and (max-width: 46.24em) {
   .card {
-    margin: 5px auto;
-    width: 100%;
+    margin: 10px auto;
+    width: 95%;
   }
 }
 @media only screen and (min-width: 46.25em) and (max-width: 63.9375em) {

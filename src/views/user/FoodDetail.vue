@@ -65,10 +65,8 @@ export default {
       .doc(this.$route.params.id)
       .get()
       .then(data => {
-        console.log(data.data());
         this.foods = data.data();
       });
-    console.log(this.foods);
   }
 };
 </script>

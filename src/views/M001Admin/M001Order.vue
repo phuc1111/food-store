@@ -58,6 +58,14 @@ export default {
     };
   },
   methods: {
+    toast(content) {
+      this.$bvToast.toast(content, {
+        title: "Thông báo",
+        toaster: "b-toaster-bottom-left",
+        solid: true,
+        appendToast: true
+      });
+    },
     getOrder() {
       this.orders = [];
       db.collection("orders")
@@ -71,14 +79,7 @@ export default {
           });
         });
     },
-    toast() {
-      this.$bvToast.toast("Xóa thành công", {
-        title: "Thông báo",
-        toaster: "b-toaster-bottom-left",
-        solid: true,
-        appendToast: true
-      });
-    },
+
     deleteOrder(id) {
       console.log(id);
       db.collection("orders")
@@ -88,7 +89,7 @@ export default {
           this.orders = this.orders.filter(food => {
             return food.id != id;
           });
-          this.toast();
+          this.toast("Xóa thành công");
         })
         .catch(err => {
           this.error = err;
@@ -101,6 +102,7 @@ export default {
           isCheck: true
         })
         .then(() => {
+          this.toast("Xác nhận đơn hàng thành công");
           this.getOrder();
         });
     }

@@ -11,11 +11,16 @@
           <li class="breadcrumb-item">
             <a href="#" class="breadcrumb-name">Trang chủ</a>
           </li>
-          <li v-if="isCate" class="breadcrumb-item active" aria-current="page">{{isCate}}</li>
+          <li v-if="cate_name" class="breadcrumb-item active" aria-current="page">{{cate_name}}</li>
         </ol>
       </nav>
       <b-input-group>
-        <b-form-input type="text" placeholder="Nhập tên để tìm sản phẩm" class="search-input"></b-form-input>
+        <b-form-input
+          type="text"
+          v-model="search"
+          placeholder="Nhập tên để tìm sản phẩm"
+          class="search-input"
+        ></b-form-input>
         <b-input-group-prepend>
           <b-button variant="outline-info">Tìm</b-button>
         </b-input-group-prepend>
@@ -28,13 +33,13 @@
         <ul class="list-group">
           <li
             class="list-group-item list-category"
-            @click="setCategory('Tất cả sản phẩm')"
+            @click="setCategory(null, 'Tất cả sản phẩm')"
           >Tất cả sản phẩm</li>
           <li
             class="list-group-item list-category"
             v-for="(cate, index) in categorys"
             :key="index"
-            @click="setCategory(cate.name)"
+            @click="setCategory(cate.cate_id, cate.name)"
           >{{cate.name}}</li>
         </ul>
 
@@ -47,9 +52,11 @@
           >{{price}}</li>
         </ul>
       </div>
+
       <div class="home__food">
+        <h2 v-if="filterCate.length <= 0">Không có sản phẩm theo yêu cầu</h2>
         <Food
-          v-for="(food, index) in foodss"
+          v-for="(food, index) in filterCate"
           :key="index"
           :image="food.image"
           :price="food.price"
@@ -108,7 +115,9 @@ export default {
   data() {
     return {
       foodss: [],
+      search: null,
       categorys: [],
+      cate_name: null,
       prices: [
         "<= 50.000 VND",
         "50.000 - 100.000 VND",
@@ -116,79 +125,13 @@ export default {
         "200.000 - 500.000 VND",
         ">= 500.000 VND"
       ],
-      foods: [
-        {
-          image:
-            "https://sohanews.sohacdn.com/thumb_w/660/2015/1-phan-biet-rau-sach-ban-1445052072947-0-0-359-488-crop-1445052237590.jpg",
-          name: "Rau sieu sach ",
-          description:
-            "Some quick example text to build on the card title and make up the bulk of the card's content.",
-          price: 12000
-        },
-        {
-          image:
-            "https://sohanews.sohacdn.com/thumb_w/660/2015/1-phan-biet-rau-sach-ban-1445052072947-0-0-359-488-crop-1445052237590.jpg",
-          name: "Rau sieu sach ",
-          description: "Some quick example content.",
-          price: 12000
-        },
-        {
-          image:
-            "https://sohanews.sohacdn.com/thumb_w/660/2015/1-phan-biet-rau-sach-ban-1445052072947-0-0-359-488-crop-1445052237590.jpg",
-          name: "Rau sieu sach ",
-          description:
-            "Some quick example text to build on the card title and make up the bulk of the card's content.",
-          price: 12000
-        },
-        {
-          image:
-            "https://sohanews.sohacdn.com/thumb_w/660/2015/1-phan-biet-rau-sach-ban-1445052072947-0-0-359-488-crop-1445052237590.jpg",
-          name: "Rau sieu sach ",
-          description: "Some quick example content.",
-          price: 12000,
-          old_price: 100000
-        },
-        {
-          image:
-            "https://sohanews.sohacdn.com/thumb_w/660/2015/1-phan-biet-rau-sach-ban-1445052072947-0-0-359-488-crop-1445052237590.jpg",
-          name: "Rau sieu sach ",
-          description:
-            "Some quick example text to build on the card title and make up the bulk of the card's content.",
-          price: 12000,
-          old_price: 100000
-        },
-        {
-          image:
-            "https://sohanews.sohacdn.com/thumb_w/660/2015/1-phan-biet-rau-sach-ban-1445052072947-0-0-359-488-crop-1445052237590.jpg",
-          name: "Rau sieu sach ",
-          description:
-            "Some quick example text to build on the card title and make up the bulk of the card's content.",
-          price: 12000,
-          old_price: 1000
-        },
-        {
-          image:
-            "https://sohanews.sohacdn.com/thumb_w/660/2015/1-phan-biet-rau-sach-ban-1445052072947-0-0-359-488-crop-1445052237590.jpg",
-          name: "Rau sieu sach ",
-          description:
-            "Some quick example text to build on the card title and make up the bulk of the card's content.",
-          price: 12000
-        },
-        {
-          image:
-            "https://sohanews.sohacdn.com/thumb_w/660/2015/1-phan-biet-rau-sach-ban-1445052072947-0-0-359-488-crop-1445052237590.jpg",
-          name: "Rau sieu sach ",
-          description:
-            "Some quick example text to build on the card title and make up the bulk of the card's content.",
-          price: 12000
-        }
-      ],
       isCate: null
     };
   },
   methods: {
-    setCategory(cate) {
+    setCategory(cate, cateName) {
       this.isCate = cate;
+      this.cate_name = cateName;
     }
   },
   created() {
@@ -218,6 +161,46 @@ export default {
     Food,
     Footer,
     M002Chat
+  },
+  computed: {
+    filterCate() {
+      if (this.isCate && this.search) {
+        return this.foodss.filter(food => {
+          return (
+            food.name.toLowerCase().includes(this.search.toLowerCase()) &&
+            food.category == this.isCate
+          );
+        });
+      }
+      if (this.isCate && !this.search) {
+        return this.foodss.filter(food => {
+          return food.category == this.isCate;
+        });
+      }
+      if (!this.isCate && this.search) {
+        return this.foodss.filter(food => {
+          return food.name.toLowerCase().includes(this.search.toLowerCase());
+        });
+      } else {
+        return this.foodss;
+      }
+    }
+  },
+  filters: {
+    cateToName(cate) {
+      var result = null;
+      switch (cate) {
+        case 1:
+          result = "Rau Sach";
+          break;
+        case 2:
+          result = "Hai San";
+          break;
+        default:
+          result = "Tat ca";
+          break;
+      }
+    }
   }
 };
 </script>

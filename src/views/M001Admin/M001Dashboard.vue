@@ -2,6 +2,7 @@
   <div class="dashboard1">
     <M001Leftmenu class="leftt" />
     <div class="content">
+      <h2>Tính năng đang được phát triển</h2>
       <div class="total">
         <M001Total
           class="total-detail total-order"

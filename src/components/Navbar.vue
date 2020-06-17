@@ -1,16 +1,16 @@
 <template>
   <div class="main-navbar">
     <b-navbar toggleable="lg" type="dark" variant="info" class="main-nav">
-      <b-navbar-brand href="/">FoodStore</b-navbar-brand>
+      <b-navbar-brand :to="{name: 'Home'}">FoodStore</b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
       <b-collapse id="nav-collapse" is-nav>
-        <b-navbar-nav>
-          <b-nav-item href="/rau-sach">Rau Sạch</b-nav-item>
-          <b-nav-item href="/hai-san">Hải Sản</b-nav-item>
-          <b-nav-item href="/gioi-thieu">Giới Thiệu</b-nav-item>
-          <b-nav-item href="/lien-he">Liên Hệ</b-nav-item>
+        <b-navbar-nav class="menu-top">
+          <b-nav-item :to="{name: 'Vegetable'}">Rau Sạch</b-nav-item>
+          <b-nav-item :to="{name: 'SeeFood'}">Hải Sản</b-nav-item>
+          <b-nav-item :to="{name: 'About'}">Giới Thiệu</b-nav-item>
+          <b-nav-item :to="{name: 'Contact'}">Liên Hệ</b-nav-item>
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
@@ -180,7 +180,7 @@ export default {
 .nav-link:hover {
   color: rgb(20, 20, 20) !important;
 }
-.navbar-brand:hover {
+.navbar-brand {
   color: rgb(20, 20, 20) !important;
 }
 .cart-bottom-action {
@@ -200,6 +200,12 @@ export default {
 }
 .modal-footer > .btn-primary {
   background: #17a2b8;
+}
+.main-nav .router-link-exact-active {
+  color: rgb(233, 223, 223) !important;
+}
+.menu-top .router-link-exact-active {
+  color: rgb(233, 223, 223) !important;
 }
 @media only screen and (max-width: 46.24em) {
   .navbar {

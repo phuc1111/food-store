@@ -7,7 +7,7 @@ Vue.config.productionTip = false;
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faFacebook, faTwitter, faLinkedin } from '@fortawesome/free-brands-svg-icons'
-import { faPen, faTrash, faCommentAlt, faCartPlus, faUtensils, faSignal, faComments, faFilter, faUser, faHandHoldingUsd } from '@fortawesome/free-solid-svg-icons'
+import { faTimes, faPen, faTrash, faCommentAlt, faCartPlus, faUtensils, faSignal, faComments, faFilter, faUser, faHandHoldingUsd } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 library.add(
@@ -23,6 +23,7 @@ library.add(
   faHandHoldingUsd,
   faCommentAlt,
   faPen,
+  faTimes,
   faTrash
 )
 

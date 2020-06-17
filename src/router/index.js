@@ -50,42 +50,66 @@ const routes = [
   {
     path: "/m001admin/",
     name: "M001Dashboard",
-    component: M001Dashboard
+    component: M001Dashboard,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/m001addcategory/",
     name: "M001AddCategory",
-    component: M001AddCategory
+    component: M001AddCategory,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/m001order/",
     name: "M001Order",
-    component: M001Order
+    component: M001Order,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/m001food/",
     name: "M001Food",
-    component: M001Food
+    component: M001Food,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/m001comment/",
     name: "M001Comment",
-    component: M001Comment
+    component: M001Comment,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/m001category/",
     name: "M001Category",
-    component: M001Category
+    component: M001Category,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/m001customer/",
     name: "M001Customer",
-    component: M001Customer
+    component: M001Customer,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/m001message/",
     name: "M001Message",
-    component: M001Message
+    component: M001Message,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/dang-nhap",
@@ -125,4 +149,18 @@ const router = new VueRouter({
   routes
 });
 
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(rec => rec.meta.requiresAuth)) {
+    var phone = localStorage.getItem("phone");
+    var token = localStorage.getItem("token");
+    if (token && phone && phone == "+84364097989") {
+      //user sign in 
+      next()
+    } else {
+      next({ name: 'M003Login' })
+    }
+  } else {
+    next()
+  }
+})
 export default router;

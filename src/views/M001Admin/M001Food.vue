@@ -94,6 +94,14 @@ export default {
     };
   },
   methods: {
+    toast(content) {
+      this.$bvToast.toast(content, {
+        title: "Thông báo",
+        toaster: "b-toaster-bottom-left",
+        solid: true,
+        appendToast: true
+      });
+    },
     limitDescription(text) {
       return text.substring(0, 55) + "...";
     },
@@ -146,6 +154,7 @@ export default {
         .doc(id)
         .delete()
         .then(() => {
+          this.toast("Xóa thành công");
           this.deleteLocal(id);
         });
     }
