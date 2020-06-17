@@ -260,4 +260,25 @@ export default {
     animation-timing-function: ease-out;
   }
 }
+@media only screen and (max-width: 46.24em) {
+  .chat {
+    right: 10px;
+  }
+}
+@media only screen and (min-width: 46.25em) and (max-width: 63.9375em) {
+  .chat {
+    right: 40px;
+  }
+  .form-chat {
+    right: 40px;
+  }
+}
+@media only screen and (min-width: 63.94em) {
+  .chat {
+    right: 10vw;
+  }
+  .form-chat {
+    right: 10vw;
+  }
+}
 </style>

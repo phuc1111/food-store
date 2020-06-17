@@ -50,6 +50,14 @@ export default {
     };
   },
   methods: {
+    toast(content) {
+      this.$bvToast.toast(content, {
+        title: "Thông báo",
+        toaster: "b-toaster-bottom-left",
+        solid: true,
+        appendToast: true
+      });
+    },
     check() {
       if (!this.name) {
         this.error.push("Vui lòng nhập tên sản phẩm");
@@ -65,6 +73,7 @@ export default {
           description: this.description
         })
         .then(() => {
+          this.toast("Thêm thành công");
           this.$router.push({ name: "M001Category" });
         })
         .catch(err => {

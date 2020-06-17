@@ -128,6 +128,14 @@ export default {
     };
   },
   methods: {
+    toast(content) {
+      this.$bvToast.toast(content, {
+        title: "Thông báo",
+        toaster: "b-toaster-bottom-left",
+        solid: true,
+        appendToast: true
+      });
+    },
     check() {
       if (!this.name) {
         this.error.push("Vui lòng nhập tên sản phẩm");
@@ -168,6 +176,7 @@ export default {
         })
         .then(() => {
           this.$router.push({ name: "M001Food" });
+          this.toast("Sửa sản phẩm thành công");
         });
     }
   },

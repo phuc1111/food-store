@@ -118,6 +118,14 @@ export default {
     };
   },
   methods: {
+    toast(content) {
+      this.$bvToast.toast(content, {
+        title: "Thông báo",
+        toaster: "b-toaster-bottom-left",
+        solid: true,
+        appendToast: true
+      });
+    },
     handleFileChange(event) {
       console.log("handlefilechange", event.target.files);
       //returns an array of files even though multiple not used
@@ -203,6 +211,7 @@ export default {
                     category: this.category
                   })
                   .then(() => {
+                    this.toast("Thêm sản phẩm thành công");
                     this.$router.push({ name: "M001Food" });
                   })
                   .catch(err => {

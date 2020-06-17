@@ -12,7 +12,7 @@
           </div>
           <del
             class="old_price price"
-            v-if="this.old_price && this.old_price<this.price"
+            v-if="this.old_price && this.old_price>this.price"
           >{{this.old_price}} VND</del>
           <span class="price">{{setPrice | priceToVnd}}</span>
         </div>
@@ -140,8 +140,8 @@ export default {
     box-shadow: inset 0 0 0 0 transparent, inset 0 0 0 0 transparent;
   }
   100% {
-    box-shadow: inset -6px 0 14px -6px rgba(0, 0, 0, 0.5),
-      inset 6px 0 14px -6px rgba(0, 0, 0, 0.5);
+    box-shadow: inset -6px 0 20px -6px rgba(0, 0, 0, 0.8),
+      inset 6px 0 14px -6px rgba(0, 0, 0, 0.8);
   }
 }
 
