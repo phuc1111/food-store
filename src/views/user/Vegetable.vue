@@ -22,9 +22,10 @@
           aria-expanded="false"
         >Theo Giá</button>
         <div class="dropdown-menu">
+          <div class="dropdown-item item" @click="cleanSort()">Tất cả</div>
           <div class="dropdown-item item" @click="sortDesc()">Từ thấp đến cao</div>
           <div class="dropdown-item item" @click="sortAsc()">Từ cao đến thấp</div>
-          <div class="dropdown-item item">Đang giảm giá</div>
+          <div class="dropdown-item item" @click="setDiscount()">Đang giảm giá</div>
         </div>
       </div>
       <div class="btn-group sort-price">
@@ -36,8 +37,8 @@
           aria-expanded="false"
         >Theo Ngày</button>
         <div class="dropdown-menu">
-          <a class="dropdown-item item" href="#">Mới nhất</a>
-          <a class="dropdown-item item" href="#">Cũ nhất</a>
+          <a class="dropdown-item item" @click="sortDateDesc()">Mới nhất</a>
+          <a class="dropdown-item item" @click="sortDateAsc()">Cũ nhất</a>
         </div>
       </div>
       <div class="input-group mb-3 search">
@@ -88,10 +89,18 @@ export default {
     return {
       foods: [],
       search: null,
-      error: null
+      error: null,
+      discount: false
     };
   },
   methods: {
+    cleanSort() {
+      this.discount = false;
+      this.search = null;
+    },
+    setDiscount() {
+      this.discount = !this.discount;
+    },
     sortDesc() {
       this.foods.sort(function(a, b) {
         return a.price - b.price;
@@ -100,6 +109,16 @@ export default {
     sortAsc() {
       this.foods.sort(function(a, b) {
         return b.price - a.price;
+      });
+    },
+    sortDateDesc() {
+      this.foods.sort(function(a, b) {
+        return a.date - b.date;
+      });
+    },
+    sortDateAsc() {
+      this.foods.sort(function(a, b) {
+        return b.date - a.date;
       });
     }
   },
@@ -117,14 +136,23 @@ export default {
   },
   computed: {
     searchData() {
-      //   var aa = [1, 2, 3, 7, 9, 0, 2, 4];
-      //   var a1 = aa.reduce(function(a, b) {
-      //     return a < b;
-      //   });
-      //   console.log(a1);
-      if (this.search) {
+      if (this.search && this.discount) {
+        return this.foods.filter(food => {
+          return (
+            food.name.toLowerCase().includes(this.search.toLowerCase()) &&
+            food.old_price != null &&
+            food.old_price > food.price
+          );
+        });
+      }
+      if (this.search && !this.discount) {
         return this.foods.filter(food => {
           return food.name.toLowerCase().includes(this.search.toLowerCase());
+        });
+      }
+      if (!this.search && this.discount) {
+        return this.foods.filter(food => {
+          return food.old_price > food.price && food.old_price != null;
         });
       } else {
         return this.foods;

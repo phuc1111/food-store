@@ -7,9 +7,9 @@
         <p class="card-text">{{this.description}}</p>
         <div class="bottom">
           <b-icon-cart-plus class="cart" @click="addItemToStore()"></b-icon-cart-plus>
-          <div>
-            <b-form-spinbutton id="demo-sb" v-model="value" min="1" max="100"></b-form-spinbutton>
-          </div>
+
+          <b-form-spinbutton id="demo-sb" v-model="value" min="1" max="100"></b-form-spinbutton>
+
           <del
             class="old_price price"
             v-if="this.old_price && this.old_price>this.price"
@@ -93,7 +93,7 @@ export default {
 <style>
 .card {
   margin: 15px;
-  width: 18rem;
+  max-width: 22rem;
   transition: linear 0.2s;
   background: rgb(212, 206, 206) !important;
   box-shadow: 10px 7px 15px #aaaaaa;
@@ -113,6 +113,9 @@ export default {
 }
 .cart {
   font-size: 20px;
+}
+.bottom .form-control {
+  width: 50%;
 }
 .cart:hover {
   color: #17a2b8;
@@ -147,14 +150,14 @@ export default {
 
 @media only screen and (max-width: 46.24em) {
   .card {
-    margin: 10px auto;
-    width: 95%;
+    /* margin: 10px auto; */
+    max-width: 22rem;
   }
 }
 @media only screen and (min-width: 46.25em) and (max-width: 63.9375em) {
   .card {
     margin: 10px;
-    width: 22rem;
+    max-width: 20rem;
   }
 }
 </style>

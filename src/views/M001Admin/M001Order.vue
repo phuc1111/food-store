@@ -69,6 +69,8 @@ export default {
     getOrder() {
       this.orders = [];
       db.collection("orders")
+        // .orderBy("phone")
+        .orderBy("isCheck")
         .get()
         .then(data => {
           data.forEach(doc => {

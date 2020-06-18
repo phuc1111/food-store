@@ -21,7 +21,10 @@
           </b-nav-form>
 
           <b-nav-item-dropdown text="Giỏ Hàng" right>
-            <b-dropdown-item href="#" v-if="arrCart.length < 1">Giỏ hàng trống</b-dropdown-item>
+            <b-dropdown-item href="#" v-if="arrCart.length < 1">
+              Giỏ hàng trống, Reload lại trang hoặc
+              <br />thêm sản phẩm để thấy chi tiết giỏ hàng
+            </b-dropdown-item>
             <b-dropdown-item href="#">
               <M002Cart
                 v-for="(cartItem, i) in this.arrCart"

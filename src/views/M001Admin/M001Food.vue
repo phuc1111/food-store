@@ -42,10 +42,10 @@
               />
             </td>
             <td @click="updateFood(food.public_id)">{{food.name}}</td>
-            <td @click="updateFood(food.public_id)">{{food.category}}</td>
-            <td @click="updateFood(food.public_id)">{{food.price }}</td>
+            <td @click="updateFood(food.public_id)">{{food.category | optionToName}}</td>
+            <td @click="updateFood(food.public_id)">{{food.price | priceToVnd}}</td>
             <td @click="updateFood(food.public_id)">{{food.old_price | priceToVnd}}</td>
-            <td @click="updateFood(food.public_id)">{{food.date}}</td>
+            <td @click="updateFood(food.public_id)">{{(food.date)}} {{toDateTime(food.time)}}</td>
             <td @click="updateFood(food.public_id)">{{food.from}}</td>
             <td>{{limitDescription(food.description)}}</td>
             <td>
@@ -79,7 +79,7 @@
 <script>
 import M001Leftmenu from "../../components/M001components/M001Leftmenu";
 import db from "@/firebase/init";
-
+import date from "../../../autoCreate/date";
 // import cloudinary from "cloudinary-vue";
 export default {
   name: "M001Food",
@@ -120,9 +120,7 @@ export default {
       this.page = this.page - 1;
     },
     toDateTime(secs) {
-      var t = new Date(1970, 0, 1); // Epoch
-      t.setSeconds(secs);
-      return t;
+      return date.getTimes(secs);
     },
     getFood() {
       db.collection("foods")
@@ -184,6 +182,16 @@ export default {
       // a.value = a.value.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
 
       return value.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,") + "  VND";
+    },
+    optionToName(number) {
+      var result;
+      if (number == 1) {
+        result = "Rau Sạch";
+      }
+      if (number == 2) {
+        result = "Hải Sản";
+      }
+      return result;
     }
   }
 };

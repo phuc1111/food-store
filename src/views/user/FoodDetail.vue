@@ -13,12 +13,13 @@
     </nav>
     <div class="food-detail">
       <img :src="foods.image" alt class="image" />
-      <div class="content">
+      <div class="detail-content">
         <h2 class="name">{{foods.name}}</h2>
-        <p>{{foods.description}}</p>
+        <p class="detail-description">{{foods.description}}</p>
         <div class="btn-action">
-          <button type="button" class="btn btn-primary">Thêm vào giỏ</button>
-          <p class="price">{{foods.price}} VND</p>
+          <button type="button" class="btn btn-primary" @click="addItemToStore()">Thêm vào giỏ</button>
+          <b-form-spinbutton id="demo-sb" v-model="value" min="1" max="100"></b-form-spinbutton>
+          <p class="price">{{setPrice | priceToVnd}}</p>
         </div>
       </div>
     </div>
@@ -47,10 +48,19 @@ export default {
 
       isLoading: false,
       fullPage: true,
-      color: "#17a2b8"
+      color: "#17a2b8",
+      value: 1
     };
   },
   methods: {
+    toast() {
+      this.$bvToast.toast("Thêm thành công", {
+        title: "Thông báo",
+        toaster: "b-toaster-bottom-left",
+        solid: true,
+        appendToast: true
+      });
+    },
     load() {
       this.isLoading = true;
       // simulate AJAX
@@ -58,7 +68,39 @@ export default {
         this.isLoading = false;
       }, 1000);
     },
-    count() {}
+    addItemToStore() {
+      //check item in session
+      var checkFood = sessionStorage.getItem(this.foods.name);
+      if (checkFood) {
+        var checkFoodObj = JSON.parse(checkFood);
+        var new_number = checkFoodObj.number + this.value;
+        sessionStorage.removeItem(this.value);
+        let food = {
+          name: this.foods.name,
+          image: this.foods.image,
+          description: this.foods.description,
+          price: this.foods.price,
+          number: new_number
+        };
+        let item = JSON.stringify(food);
+        sessionStorage.setItem(this.foods.name, item);
+        this.$store.commit("pushCart", food);
+        this.toast();
+      }
+      if (!checkFood) {
+        let food = {
+          name: this.foods.name,
+          image: this.foods.image,
+          description: this.foods.description,
+          price: this.foods.price,
+          number: this.value
+        };
+        let item = JSON.stringify(food);
+        sessionStorage.setItem(this.foods.name, item);
+        this.toast();
+      }
+      this.value = 1;
+    }
   },
   created() {
     db.collection("foods")
@@ -67,6 +109,19 @@ export default {
       .then(data => {
         this.foods = data.data();
       });
+  },
+  computed: {
+    setPrice() {
+      return this.foods.price * this.value;
+    }
+  },
+  filters: {
+    priceToVnd(price) {
+      if (!price) return "Chưa có";
+      return (
+        price.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,") + "  VND"
+      );
+    }
   }
 };
 </script>
@@ -74,6 +129,12 @@ export default {
 .detail {
   max-width: 1500px;
   margin: 0 auto;
+}
+#demo-sb {
+  width: 100px !important;
+}
+.btn-action .form-control {
+  width: 25% !important;
 }
 .food-detail {
   max-width: 1200px;
@@ -85,15 +146,17 @@ export default {
   justify-content: space-around;
   align-self: center;
 }
-.content {
-  margin: 10px 0;
+.detail-content {
+  margin: 10px auto;
   width: 50%;
 }
 .price {
   align-self: center;
 }
 .image {
-  width: 100%;
+  width: 50%;
+  height: auto;
+  max-height: 50vh;
 }
 @media only screen and (max-width: 46.24em) {
   .food-detail {
@@ -101,16 +164,27 @@ export default {
     display: block;
   }
   .image {
+    width: 90%;
+  }
+  .detail-content {
+    margin: 5px 0;
     width: 100%;
   }
-  .content {
-    margin: 10px;
+  .detail-description {
+    margin: 10px auto !important;
   }
 }
 @media only screen and (min-width: 46.25em) and (max-width: 63.9375em) {
   .food-detail {
     margin: 50px auto;
     display: block;
+  }
+  .image {
+    width: 80%;
+  }
+  .detail-content {
+    margin: 5px;
+    width: 100%;
   }
 }
 </style>

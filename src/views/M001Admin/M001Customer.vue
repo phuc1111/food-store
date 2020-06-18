@@ -27,7 +27,6 @@ export default {
         data.forEach(doc => {
           let user = doc.data();
 
-          console.log(user);
           this.users.push(user);
         });
       });

@@ -14,6 +14,35 @@
           <li v-if="cate_name" class="breadcrumb-item active" aria-current="page">{{cate_name}}</li>
         </ol>
       </nav>
+      <button type="button" class="btn btn-info sort-btn">Sắp xếp</button>
+      <div class="btn-group sort-price">
+        <button
+          type="button"
+          class="btn btn-light dropdown-toggle"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >Theo Giá</button>
+        <div class="dropdown-menu">
+          <div class="dropdown-item item" @click="cleanSort()">Tất cả</div>
+          <div class="dropdown-item item" @click="sortDesc()">Từ thấp đến cao</div>
+          <div class="dropdown-item item" @click="sortAsc()">Từ cao đến thấp</div>
+          <div class="dropdown-item item" @click="setDiscount()">Đang giảm giá</div>
+        </div>
+      </div>
+      <div class="btn-group sort-price">
+        <button
+          type="button"
+          class="btn btn-light dropdown-toggle"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >Theo Ngày</button>
+        <div class="dropdown-menu">
+          <a class="dropdown-item item" @click="sortDateDesc()">Mới nhất</a>
+          <a class="dropdown-item item" @click="sortDateAsc()">Cũ nhất</a>
+        </div>
+      </div>
       <b-input-group>
         <b-form-input
           type="text"
@@ -54,7 +83,7 @@
       </div>
 
       <div class="home__food">
-        <h2 v-if="filterCate.length <= 0">Không có sản phẩm theo yêu cầu</h2>
+        <h2 class="err" v-if="filterCate.length <= 0">Không có sản phẩm theo yêu cầu</h2>
         <Food
           v-for="(food, index) in filterCate"
           :key="index"
@@ -125,13 +154,42 @@ export default {
         "200.000 - 500.000 VND",
         ">= 500.000 VND"
       ],
-      isCate: null
+      isCate: null,
+      discount: false
     };
   },
   methods: {
     setCategory(cate, cateName) {
       this.isCate = cate;
       this.cate_name = cateName;
+      document.title = cateName;
+    },
+    cleanSort() {
+      this.discount = false;
+      this.search = null;
+    },
+    setDiscount() {
+      this.discount = !this.discount;
+    },
+    sortDesc() {
+      this.foodss.sort(function(a, b) {
+        return a.price - b.price;
+      });
+    },
+    sortAsc() {
+      this.foodss.sort(function(a, b) {
+        return b.price - a.price;
+      });
+    },
+    sortDateDesc() {
+      this.foodss.sort(function(a, b) {
+        return a.date - b.date;
+      });
+    },
+    sortDateAsc() {
+      this.foodss.sort(function(a, b) {
+        return b.date - a.date;
+      });
     }
   },
   created() {
@@ -164,7 +222,17 @@ export default {
   },
   computed: {
     filterCate() {
-      if (this.isCate && this.search) {
+      if (this.isCate && this.search && this.discount) {
+        return this.foodss.filter(food => {
+          return (
+            food.name.toLowerCase().includes(this.search.toLowerCase()) &&
+            food.category == this.isCate &&
+            food.old_price != null &&
+            food.old_price > food.price
+          );
+        });
+      }
+      if (this.isCate && this.search && !this.discount) {
         return this.foodss.filter(food => {
           return (
             food.name.toLowerCase().includes(this.search.toLowerCase()) &&
@@ -172,14 +240,37 @@ export default {
           );
         });
       }
-      if (this.isCate && !this.search) {
+      if (this.isCate && !this.search && this.discount) {
+        return this.foodss.filter(food => {
+          return (
+            food.category == this.isCate &&
+            food.old_price != null &&
+            food.old_price > food.price
+          );
+        });
+      }
+      if (this.isCate && !this.search && !this.discount) {
         return this.foodss.filter(food => {
           return food.category == this.isCate;
         });
       }
-      if (!this.isCate && this.search) {
+      if (!this.isCate && this.search && this.discount) {
+        return this.foodss.filter(food => {
+          return (
+            food.name.toLowerCase().includes(this.search.toLowerCase()) &&
+            food.old_price != null &&
+            food.old_price > food.price
+          );
+        });
+      }
+      if (!this.isCate && this.search && !this.discount) {
         return this.foodss.filter(food => {
           return food.name.toLowerCase().includes(this.search.toLowerCase());
+        });
+      }
+      if (!this.isCate && !this.search && this.discount) {
+        return this.foodss.filter(food => {
+          return food.old_price != null && food.old_price > food.price;
         });
       } else {
         return this.foodss;

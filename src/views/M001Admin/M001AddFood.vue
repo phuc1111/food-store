@@ -205,6 +205,7 @@ export default {
                     public_id: data.data.public_id,
                     name: this.name,
                     price: this.price,
+                    time: Date.now(),
                     date: date.getCurrentDay(),
                     description: this.description,
                     from: this.from,

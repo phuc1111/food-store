@@ -81,7 +81,6 @@ export default {
       .get()
       .then(data => {
         data.forEach(cates => {
-          console.log(cates.data());
           let category = cates.data();
           category.id = cates.id;
           this.categorys.push(category);
