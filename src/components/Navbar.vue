@@ -15,14 +15,9 @@
 
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
-          <b-nav-form class="nav-search">
-            <b-form-input size="sm" class="mr-sm-2" placeholder="Nhập sản phẩm để tìm"></b-form-input>
-            <b-button size="sm" class="my-2 my-sm-0 btn-search" type="submit">Tìm kiếm</b-button>
-          </b-nav-form>
-
           <b-nav-item-dropdown text="Giỏ Hàng" right>
             <b-dropdown-item href="#" v-if="arrCart.length < 1">
-              Giỏ hàng trống, Reload lại trang hoặc
+              Giỏ hàng trống, tải lại trang hoặc
               <br />thêm sản phẩm để thấy chi tiết giỏ hàng
             </b-dropdown-item>
             <b-dropdown-item href="#">

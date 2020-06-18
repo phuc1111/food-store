@@ -1,5 +1,6 @@
 <template>
   <div class="dashboard">
+    <router-link :to="{name: 'Home'}">Trang chủ</router-link>
     <div class="dashboard_tasks">
       <b-list-group>
         <router-link :to="{name: 'M001Dashboard'}">

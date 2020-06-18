@@ -20,7 +20,7 @@
 
 <script>
 import db from "@/firebase/init";
-
+import date from "../../../autoCreate/date";
 import firebase from "firebase";
 export default {
   name: "SeeFood",
@@ -104,7 +104,11 @@ export default {
                       console.log("new user ");
                       db.collection("users")
                         .doc(new_phone)
-                        .set({ phone: new_phone, address: this.address })
+                        .set({
+                          phone: new_phone,
+                          address: this.address,
+                          date: date.getCurrentDay()
+                        })
                         .then(() => {
                           vm.$router.push({ name: "Home" });
                           location.reload();

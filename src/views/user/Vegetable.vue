@@ -113,12 +113,12 @@ export default {
     },
     sortDateDesc() {
       this.foods.sort(function(a, b) {
-        return a.date - b.date;
+        return a.time - b.time;
       });
     },
     sortDateAsc() {
       this.foods.sort(function(a, b) {
-        return b.date - a.date;
+        return b.time - a.time;
       });
     }
   },

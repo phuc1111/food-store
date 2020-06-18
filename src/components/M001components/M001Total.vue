@@ -37,7 +37,7 @@ export default {
   font-size: 20px;
   border-radius: 5px;
   box-shadow: 10px 7px 5px rgb(121, 117, 117);
-  transition: linear 0.3s;
+  transition: linear 0.4s;
 }
 .totall:hover {
   color: #17a2b8;

@@ -72,14 +72,14 @@
           >{{cate.name}}</li>
         </ul>
 
-        <p class="home_category--filter cate">Lọc theo</p>
+        <!-- <p class="home_category--filter cate">Lọc theo</p>
         <ul class="list-group">
           <li
             class="list-group-item list-category"
             v-for="(price, index) in prices"
             :key="index"
           >{{price}}</li>
-        </ul>
+        </ul>-->
       </div>
 
       <div class="home__food">
@@ -183,12 +183,12 @@ export default {
     },
     sortDateDesc() {
       this.foodss.sort(function(a, b) {
-        return a.date - b.date;
+        return a.time - b.time;
       });
     },
     sortDateAsc() {
       this.foodss.sort(function(a, b) {
-        return b.date - a.date;
+        return b.time - a.time;
       });
     }
   },

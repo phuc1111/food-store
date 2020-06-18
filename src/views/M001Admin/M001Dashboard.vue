@@ -7,25 +7,25 @@
         <M001Total
           class="total-detail total-order"
           :name="total[0].name"
-          :value="total[0].value"
+          :value="order"
           :icon="total[0].icon"
         />
         <M001Total
           class="total-detail total-cus"
           :name="total[1].name"
-          :value="total[1].value"
+          :value="customer"
           :icon="total[1].icon"
         />
         <M001Total
           class="total-detail total-food"
           :name="total[2].name"
-          :value="total[2].value"
+          :value="food"
           :icon="total[2].icon"
         />
         <M001Total
           class="total-detail total-price"
           :name="total[3].name"
-          :value="total[3].value"
+          :value="money | priceToVnd"
           :icon="total[3].icon"
         />
       </div>
@@ -42,7 +42,8 @@
 import M001Leftmenu from "../../components/M001components/M001Leftmenu";
 import M001Total from "../../components/M001components/M001Total";
 import M001Count from "../../components/M001components/M001Count";
-
+import db from "@/firebase/init";
+// import date from "../../../autoCreate/date";
 export default {
   name: "M001Dashboard",
   components: {
@@ -52,6 +53,10 @@ export default {
   },
   data() {
     return {
+      order: null,
+      customer: null,
+      food: null,
+      money: null,
       total: [
         {
           name: "Tổng đơn hàng",
@@ -85,6 +90,36 @@ export default {
       ],
       time: ["Trong ngày", "Trong tuần", "Trong tháng", "Trong năm"]
     };
+  },
+  mounted() {
+    db.collection("orders")
+      .get()
+      .then(data => {
+        this.order = data.size;
+        data.forEach(order => {
+          this.money += order.data().total;
+        });
+      });
+
+    db.collection("users")
+      .get()
+      .then(data => {
+        this.customer = data.size;
+      });
+
+    db.collection("foods")
+      .get()
+      .then(data => {
+        this.food = data.size;
+      });
+  },
+  filters: {
+    priceToVnd(price) {
+      if (!price) return "Chưa có";
+      return (
+        price.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,") + "  VND"
+      );
+    }
   }
 };
 </script>
@@ -111,16 +146,20 @@ export default {
   margin: 32px auto;
 }
 .total-order {
-  background: #36bea6;
+  /* background: #36bea6; */
+  background-image: linear-gradient(to bottom right, #14ddb1f1, #ff8635);
 }
 .total-cus {
-  background: #009efb;
+  /* background: #009efb; */
+  background-image: linear-gradient(to right, #fc00ff, #00dbde);
 }
 .total-food {
-  background: #55c256;
+  /* background: #55c256; */
+  background-image: linear-gradient(to top right, #283048, #859398);
 }
 .total-price {
-  background: #f62d51;
+  /* background: #f62d51; */
+  background-image: linear-gradient(to bottom right, #642b73, #c6426e);
 }
 @media only screen and (max-width: 46.24em) {
   .leftt {

@@ -36,8 +36,8 @@
           aria-expanded="false"
         >Theo Ngày</button>
         <div class="dropdown-menu">
-          <a class="dropdown-item item" href="#">Mới nhất</a>
-          <a class="dropdown-item item" href="#">Cũ nhất</a>
+          <a class="dropdown-item item" @click="sortDateDesc()">Mới nhất</a>
+          <a class="dropdown-item item" @click="sortDateAsc()">Cũ nhất</a>
         </div>
       </div>
       <div class="input-group mb-3 search">
@@ -100,6 +100,16 @@ export default {
     sortAsc() {
       this.foods.sort(function(a, b) {
         return b.price - a.price;
+      });
+    },
+    sortDateDesc() {
+      this.foods.sort(function(a, b) {
+        return a.time - b.time;
+      });
+    },
+    sortDateAsc() {
+      this.foods.sort(function(a, b) {
+        return b.time - a.time;
       });
     }
   },
